@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React from 'react';
 import ReactDOM from 'react-dom';
 
 const Header = (props) => {
@@ -60,22 +60,12 @@ const App = () => {
 		]
 	}
 
-	const [counter, setCounter] = useState(0)
-
-	setTimeout(
-		() => setCounter(counter + 1),
-		1000
-	)
-
-	console.log('rendering....', counter)
-
 	return (
 		<div>
 			<Header course={course.name} />
 			<Content parts={course.parts} />
 			<Total parts={course.parts} />
-			<div>{counter}</div>
-		</div>
+	</div>
 	)
 }
 
