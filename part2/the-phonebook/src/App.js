@@ -2,7 +2,7 @@ import React, {useState, useEffect} from 'react'
 import PersonForm from './components/PersonForm'
 import Persons from './components/Persons'
 import Filter from './components/Filter'
-import axios from 'axios'
+import phoneService from './services/persons'
 const log = console.log
 
 const App = () => {
@@ -12,10 +12,10 @@ const App = () => {
 	const [filterName, setFilterName] = useState('')
 
 	const hook = () => {
-		axios
-			.get('http://localhost:3001/persons')
+		phoneService
+			.getAll()
 			.then(res => {
-				setPersons(res.data)
+				setPersons(res)
 			})
 	}
 
@@ -36,9 +36,13 @@ const App = () => {
 			name: newName.trim(),
 			number: newNumber
 		}
-		setPersons(persons.concat(personObj))
-		setNewName('')
-		setNewNumber('')
+		phoneService
+			.create(personObj)
+			.then(res => {
+				setPersons(persons.concat(personObj))
+				setNewName('')
+				setNewNumber('')
+			})
 	}
 
 	const handleNumberChange = (event) => {
@@ -47,6 +51,14 @@ const App = () => {
 
 	const handleFilterName = (event) => {
 		setFilterName(event.target.value)
+	}
+
+	const deletePersonOf = id => {
+		const person = persons.find(person => person.id === id)
+		if (window.confirm(`delete ${person.name}?`)) {
+			phoneService.remove(id)
+			log('deleted')
+		}
 	}
 
 	return (
@@ -58,7 +70,7 @@ const App = () => {
 		<PersonForm onSubmit={addPerson} onChange={handleNameChange} onChange2={handleNumberChange} newName={newName} newNumber={newNumber}/>
 
 		<h2>Numbers</h2>
-		<Persons persons={persons} />
+		<Persons persons={persons} deletePerson={(id) => deletePersonOf(id)}/>
 		<p>debug: {newName}</p>
 	</div>
 	)
