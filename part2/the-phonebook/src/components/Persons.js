@@ -1,17 +1,25 @@
 import React from 'react';
 
-const Persons = ({persons, deletePerson}) => {
-	const rows = () => persons.map(person => 
-		<li key={person.id}>
-			{person.name} {person.number} 
-			<button onClick={deletePerson(person.id)}>delete</button>
-		</li>	
-	)
+const Persons = ({filter, persons, deletePersonOf}) => {
+	const newPersons = filter.length ? persons.filter(person => person.name.toLowerCase().includes(filter.toLowerCase())) : persons
+
+	// const rows = () => newPersons.map(person => 
+	// 	<li key={person.name}>
+	// 		{person.name} {person.number} 
+	// 		<button onClick={() => deletePersonOf(person.id)}>delete</button>
+	// 	</li>	
+	// )
 
 	return (
-		<div>
-			<ul>{rows()}</ul>
-		</div>
+		<ul>
+			{newPersons.map(person => 
+				<li key={person.name}>
+					{person.name} {person.number} 
+					<button onClick={() => deletePersonOf(person.id)}>delete</button>
+				</li>	
+			)}
+			{/* {rows()} */}
+		</ul>
 	);
 };
 
