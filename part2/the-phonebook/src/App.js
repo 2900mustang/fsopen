@@ -4,7 +4,6 @@ import Persons from './components/Persons'
 import Filter from './components/Filter'
 import personService from './services/persons'
 import Notification from './components/Notification'
-const log = console.log
 
 const App = () => {
 	const [ persons, setPersons] = useState([]) 
@@ -23,7 +22,7 @@ const App = () => {
 
 	useEffect(hook, [])
 
-	const notify = (message, type='success') => {
+	const notify = (message, type='ok') => {
 		setNotification({message, type})
 		setTimeout(() => setNotification({ message: null }), 3500)
 	}
@@ -42,14 +41,17 @@ const App = () => {
 				personService
 					.replace({
 						...existingPerson,
-						number: newNumber,
-						id: existingPerson.id
+						number: newNumber
 					})
 					.then(replacedPerson => {
-						setPersons(persons.map(person => person.name === newName ? replacedPerson : person))
+						setPersons(persons.map(person => person.name === existingPerson.name ? replacedPerson : person))
 						setNewName('')
 						setNewNumber('')
 						notify(`${newName}'s number has been changed.`)
+					})
+					.catch(() => {
+						setPersons(persons.filter(person => person.name !== existingPerson.name))
+						notify(`${existingPerson.name} has already been deleted`, 'error')
 					})
 			}
 			return 
@@ -57,13 +59,13 @@ const App = () => {
 		
 		const personObj = {
 			name: newName.trim(),
-			number: newNumber
+			number: newNumber,
+			id: persons.length + 1
 		}
 
 		personService
 			.create(personObj)
 			.then(newPerson => {
-				log(newPerson)
 				setPersons(persons.concat(personObj))
 				setNewName('')
 				setNewNumber('')
