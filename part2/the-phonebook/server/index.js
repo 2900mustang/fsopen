@@ -15,6 +15,7 @@ morgan.token(('name', 'number'), function getInfo (req) {
 
 app.use(bodyParser.json())
 app.use(morgan('dev'))
+app.use(express.static('build'))
 
 let persons = [
 	{
