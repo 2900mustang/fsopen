@@ -49,9 +49,9 @@ const App = () => {
 						setNewNumber('')
 						notify(`${newName}'s number has been changed.`)
 					})
-					.catch(() => {
+					.catch(err => {
 						setPersons(persons.filter(person => person.name !== existingPerson.name))
-						notify(`${existingPerson.name} has already been deleted`, 'error')
+						notify(`${existingPerson.name} has already been deleted, ${err}`)
 					})
 			}
 			return 
@@ -59,14 +59,13 @@ const App = () => {
 		
 		const personObj = {
 			name: newName.trim(),
-			number: newNumber,
-			id: persons.length + 1
+			number: newNumber
 		}
 
 		personService
 			.create(personObj)
 			.then(newPerson => {
-				setPersons(persons.concat(personObj))
+				setPersons(persons.concat(newPerson))
 				setNewName('')
 				setNewNumber('')
 				notify(`new contact created ${newPerson.name}`)
