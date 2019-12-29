@@ -16,7 +16,7 @@ TODO:
 app.use(bodyParser.json())
 app.use(morgan('dev'))
 //app.use(cors())
-//app.use(express.static('build'))
+app.use(express.static('build'))
 
 //all contacts
 app.get('/api/contacts', (req, res) => {
@@ -46,7 +46,7 @@ app.get('/api/info', (req, res, next) => {
 		.catch(err => next(err))
 })
 
-app.post('/api/contacts', (req, res) => {
+app.post('/api/contacts', (req, res, next) => {
 	const body = req.body
 
 	if (!body.name) {
@@ -60,22 +60,15 @@ app.post('/api/contacts', (req, res) => {
 		})
 	}
 
-	// const existingContact = Contact.find(contact => contact.name === body.name)
-
-	// if (existingContact) {
-	// 	return res.status(400).json({
-	// 		error: 'name must be unique'
-	// 	})
-	// }
-
 	const contact = new Contact({
 		name: body.name,
 		number: body.number,
 	})
 	
-	contact.save().then(savedContact => {
-		res.json(savedContact.toJSON())
-	})
+	contact.save()
+		.then(savedContact => savedContact.toJSON())
+		.then(savedAndFormattedContact => res.json(savedAndFormattedContact))
+		.catch(err => next(err))
 })
 
 app.put('/api/contacts/:id', (req, res, next) => {
@@ -86,7 +79,7 @@ app.put('/api/contacts/:id', (req, res, next) => {
 		number: body.number,
 	}
 
-	Contact.findByIdAndUpdate(req.params.id, contact, {new: true})
+	Contact.findByIdAndUpdate(req.params.id, contact, {new: true, runValidators: true, context: 'query'})
 		.then(updatedContact => res.json(updatedContact.toJSON()))
 		.catch(err => next(err))
 })
@@ -108,6 +101,8 @@ const errorHandler = (err, req, res, next) => {
 
 	if (err.name === 'CastError' && err.kind === 'ObjectId') {
 		return res.status(400).send({error: 'malformatted id'})
+	} else if (err.name === 'ValidationError') {
+		return res.status(400).json({error: err.message})
 	}
 
 	next(err)

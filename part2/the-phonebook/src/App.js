@@ -5,6 +5,8 @@ import Filter from './components/Filter'
 import personService from './services/persons'
 import Notification from './components/Notification'
 
+const log = console.log
+
 const App = () => {
 	const [ persons, setPersons] = useState([]) 
 	const [ newName, setNewName ] = useState('')
@@ -50,8 +52,10 @@ const App = () => {
 						notify(`${newName}'s number has been changed.`)
 					})
 					.catch(err => {
-						setPersons(persons.filter(person => person.name !== existingPerson.name))
-						notify(`${existingPerson.name} has already been deleted, ${err}`)
+						//setPersons(persons.filter(person => person.name !== existingPerson.name))
+						//notify(`${existingPerson.name} has already been deleted, ${err}`)
+						notify(err.response.data.error, 'error')
+						log(err.response.data.error)
 					})
 			}
 			return 
@@ -64,11 +68,15 @@ const App = () => {
 
 		personService
 			.create(personObj)
-			.then(newPerson => {
-				setPersons(persons.concat(newPerson))
+			.then(createdPerson => {
+				setPersons(persons.concat(createdPerson))
 				setNewName('')
 				setNewNumber('')
-				notify(`new contact created ${newPerson.name}`)
+				notify(`new contact created ${createdPerson.name}`)				
+			})
+			.catch(err => {
+				notify(err.response.data.error, 'error')
+				log(err.response.data)
 			})
 	}
 
