@@ -1,0 +1,64 @@
+{
+  "notes": [
+    {
+      "content": "the app state is in redux store",
+      "important": true,
+      "id": 0
+    },
+    {
+      "content": "state changes are made with actions",
+      "important": false,
+      "id": 1
+    },
+    {
+      "content": "hippo",
+      "important": true,
+      "id": 2
+    },
+    {
+      "content": "hippo",
+      "important": true,
+      "id": 3
+    },
+    {
+      "content": "hippo",
+      "important": false,
+      "id": 4
+    },
+    {
+      "content": "hippo",
+      "important": true,
+      "id": 5
+    },
+    {
+      "content": "hippo",
+      "important": true,
+      "id": 6
+    },
+    {
+      "content": "turkey baking",
+      "important": false,
+      "id": 7
+    },
+    {
+      "content": "hippo",
+      "important": false,
+      "id": 8
+    },
+    {
+      "content": "hippo",
+      "important": false,
+      "id": 9
+    },
+    {
+      "content": "turkey baking",
+      "important": true,
+      "id": 10
+    },
+    {
+      "content": "daddadada",
+      "important": true,
+      "id": 11
+    }
+  ]
+}

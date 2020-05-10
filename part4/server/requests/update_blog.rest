@@ -1,0 +1,9 @@
+PUT http://localhost:3009/api/blogs/5e1e46b091fc632d324344d3
+Content-Type: application/json
+
+{
+	"title": "dimensional herd",
+	"author": "Trek",
+	"url": "pixar.com",
+	"likes": 2
+}
